@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<!--
+  SAGE EXPLORER 报告底稿
+  用法：复制本文件到工作区，替换所有 【...】 占位符。
+  章节按 L0→L4 由浅入深；不需要的人物卡片/方法节点整块删除，需要的整块复制。
+  禁止外链图片与外部 CSS/JS；图示一律用下面的内联样式组件绘制。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【问题一句话】 · 智者视角报告</title>
+<style>
+  :root{
+    --ink:#1a1a2e; --paper:#faf8f4; --accent:#8b5cf6; --accent-soft:#ede9fe;
+    --amber:#b45309; --amber-soft:#fef3c7; --green:#047857; --green-soft:#d1fae5;
+    --line:#e5e0d8; --muted:#6b7280; --serif:"Songti SC","STSong","Noto Serif CJK SC",serif;
+    --sans:-apple-system,"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.85;font-size:16px}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 96px}
+
+  /* ── 页眉 ── */
+  header.hero{padding:72px 24px 48px;text-align:center;border-bottom:1px solid var(--line)}
+  .hero .kicker{font-size:13px;letter-spacing:.35em;color:var(--accent);text-transform:uppercase;margin-bottom:16px}
+  .hero h1{font-family:var(--serif);font-size:34px;line-height:1.4;margin-bottom:18px}
+  .hero .oneline{font-size:18px;color:var(--muted);max-width:640px;margin:0 auto}
+  .hero .meta{margin-top:24px;font-size:13px;color:var(--muted)}
+
+  /* ── 目录 ── */
+  nav.toc{margin:40px 0;padding:24px 28px;background:#fff;border:1px solid var(--line);border-radius:14px;font-size:15px}
+  nav.toc b{display:block;margin-bottom:10px;font-family:var(--serif)}
+  nav.toc a{color:var(--accent);text-decoration:none;margin-right:18px;white-space:nowrap}
+  nav.toc a:hover{text-decoration:underline}
+
+  section{margin-top:64px}
+  .lvl{display:inline-block;font-size:12px;letter-spacing:.25em;color:#fff;background:var(--ink);border-radius:4px;padding:3px 10px;margin-bottom:14px}
+  h2{font-family:var(--serif);font-size:26px;margin-bottom:8px}
+  h3{font-family:var(--serif);font-size:20px;margin:36px 0 12px}
+  .lede{color:var(--muted);margin-bottom:28px}
+  p{margin-bottom:14px}
+  mark{background:var(--accent-soft);color:var(--ink);padding:0 3px;border-radius:3px}
+
+  /* ── L0 结论卡片 ── */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:20px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px;font-size:15px}
+  .card b{display:block;font-family:var(--serif);font-size:16px;margin-bottom:6px}
+  .card.accent{border-top:4px solid var(--accent)}
+
+  /* ── 谱系图（L2）── */
+  .map{background:#fff;border:1px solid var(--line);border-radius:14px;padding:28px;margin:24px 0;overflow-x:auto}
+  .map svg{display:block;margin:0 auto;max-width:100%}
+  .map .node{fill:#fff;stroke:var(--ink);stroke-width:1.5}
+  .map .rel{stroke:var(--muted);stroke-width:1.2;fill:none;marker-end:url(#arr)}
+  .map text{font-family:var(--sans);font-size:13px;fill:var(--ink)}
+  .map .tag{font-size:11px;fill:var(--muted)}
+
+  /* ── 人物卡片 ── */
+  .sage{display:flex;gap:20px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px;margin:20px 0}
+  .avatar{flex:none;width:64px;height:64px;border-radius:50%;background:var(--ink);color:#fff;
+          display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:26px}
+  .sage .who h3{margin:0 0 4px;font-size:19px}
+  .badge{display:inline-block;font-size:11px;border-radius:99px;padding:2px 10px;margin-right:6px;vertical-align:2px}
+  .badge.main{background:var(--ink);color:#fff}
+  .badge.edge{background:var(--amber-soft);color:var(--amber)}
+  .badge.cross{background:var(--green-soft);color:var(--green)}
+  .sage .method{margin-top:10px;font-size:15px;background:var(--paper);border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0}
+  .sage .method::before{content:"思考方法 · ";font-weight:600;color:var(--accent)}
+
+  /* ── 方法脊柱（L3 主线图）── */
+  .spine{position:relative;margin:32px 0 8px;padding-left:34px}
+  .spine::before{content:"";position:absolute;left:11px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--accent),var(--amber))}
+  .node{position:relative;margin-bottom:36px}
+  .node::before{content:"";position:absolute;left:-29px;top:8px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:3px solid var(--paper);box-shadow:0 0 0 2px var(--accent)}
+  .node h3{margin:0 0 6px}
+  .node .from{font-size:13px;color:var(--muted);margin-bottom:8px}
+  .case{background:#fff;border:1px dashed var(--line);border-radius:12px;padding:16px 20px;font-size:15px;margin-top:10px}
+  .case::before{content:"案例 · ";font-weight:600;color:var(--amber)}
+  .blind{font-size:14px;color:var(--amber);margin-top:10px}
+  .blind::before{content:"盲区 · ";font-weight:600}
+
+  /* ── 冲突对照表（L4）── */
+  table.vs{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;margin:20px 0;font-size:15px}
+  table.vs th,table.vs td{border:1px solid var(--line);padding:14px 16px;text-align:left;vertical-align:top}
+  table.vs th{background:var(--ink);color:#fff;font-family:var(--serif);font-weight:600}
+  table.vs td:first-child{font-weight:600;white-space:nowrap;background:var(--paper)}
+
+  .verdict{background:var(--accent-soft);border:1px solid var(--accent);border-radius:14px;padding:24px 28px;margin-top:28px}
+  .verdict b{font-family:var(--serif);font-size:18px;display:block;margin-bottom:8px}
+
+  footer{margin-top:72px;padding-top:24px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+  footer h3{font-size:15px;margin:0 0 8px}
+  @media(max-width:600px){.sage{flex-direction:column}.hero h1{font-size:26px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">Sage Explorer · 智者视角</div>
+  <h1>【用户的问题，一句话呈现】</h1>
+  <p class="oneline">【一句话回答：诚实、直接、不回避不确定性】</p>
+  <div class="meta">领域：【领域名】 · 收录智者：【N】 位 · 【YYYY 年 M 月 D 日】</div>
+</header>
+
+<div class="wrap">
+
+<nav class="toc">
+  <b>目录</b>
+  <a href="#l0">速览</a><a href="#l1">图景</a><a href="#l2">智者谱系</a><a href="#l3">方法脊柱</a><a href="#l4">批判与综合</a>
+</nav>
+
+<!-- ═══════ L0 速览 ═══════ -->
+<section id="l0">
+  <span class="lvl">L0 · 速览</span>
+  <h2>三十秒带走的结论</h2>
+  <div class="cards">
+    <div class="card accent"><b>结论一</b>【最核心的一条结论，一两句话】</div>
+    <div class="card"><b>结论二</b>【……】</div>
+    <div class="card"><b>结论三</b>【……】</div>
+    <!-- 按需增删卡片，3–5 张 -->
+  </div>
+</section>
+
+<!-- ═══════ L1 直觉图景 ═══════ -->
+<section id="l1">
+  <span class="lvl">L1 · 图景</span>
+  <h2>先用大白话说清楚这件事</h2>
+  <p class="lede">不引用任何人名，只建立画面。</p>
+  <p>【用比喻和常识把问题的结构讲清楚：真正在争什么、为什么难、关键的变量是什么。】</p>
+</section>
+
+<!-- ═══════ L2 智者谱系（骨架）═══════ -->
+<section id="l2">
+  <span class="lvl">L2 · 骨架</span>
+  <h2>这个问题上看得最深的几个人</h2>
+  <p class="lede">选人标准是思考质量，不是名气。光谱徽章如实标注：主流 / 边缘 / 跨界。</p>
+
+  <!-- 谱系图：按需调整节点坐标与连线；rel 线上的文字标注关系（继承/反对/互补） -->
+  <div class="map">
+    <svg width="720" height="260" viewBox="0 0 720 260">
+      <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8" fill="none" stroke="#6b7280" stroke-width="1.2"/></marker></defs>
+      <!-- 连线示例 -->
+      <path class="rel" d="M180,80 C260,80 280,180 350,180"/>
+      <text x="255" y="120" class="tag">反对其【某前提】</text>
+      <!-- 节点示例：一人一组 rect+text -->
+      <rect class="node" x="80" y="50" width="140" height="60" rx="12"/>
+      <text x="150" y="76" text-anchor="middle">【人物甲】</text>
+      <text x="150" y="96" text-anchor="middle" class="tag">【学派/标签】</text>
+      <rect class="node" x="350" y="150" width="140" height="60" rx="12"/>
+      <text x="420" y="176" text-anchor="middle">【人物乙】</text>
+      <text x="420" y="196" text-anchor="middle" class="tag">边缘 · 异见者</text>
+    </svg>
+  </div>
+
+  <!-- 人物卡片：一人一块，按需复制 -->
+  <div class="sage">
+    <div class="avatar">【姓】</div>
+    <div class="who">
+      <h3>【姓名】 <span class="badge main">主流</span><!-- 边缘用 badge edge，跨界用 badge cross --></h3>
+      <p>【一句话定位 + 代表材料。主要争议一句话。】</p>
+      <div class="method">【他的核心思考方法，一两句话】</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ L3 方法脊柱（脊柱，全文重心）═══════ -->
+<section id="l3">
+  <span class="lvl">L3 · 脊柱</span>
+  <h2>五种真正的看法，各自怎么"看"</h2>
+  <p class="lede">以下按由浅入深排序。每个方法都回答：是什么 → 为何这样看 → 用在本问题上推出什么 → 盲区。</p>
+
+  <div class="spine">
+    <!-- 方法节点：一个方法一块，按需复制 -->
+    <div class="node">
+      <h3>方法一：【方法名，如"档案还原法"】</h3>
+      <div class="from">来自 【人物】 · 适用于 【哪类问题】</div>
+      <p>【方法是什么、为什么这样看问题。】</p>
+      <p>如果用它来看本问题，会得到：【应用段——把方法落到用户的具体问题上，给出推演。】</p>
+      <div class="case">【一个具体的案例/数据/历史细节，支撑这个方法的有效性。】</div>
+      <p class="blind">【这个方法在什么情况下会失效。】</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ L4 批判与综合 ═══════ -->
+<section id="l4">
+  <span class="lvl">L4 · 综合</span>
+  <h2>他们真正冲突在哪里</h2>
+
+  <table class="vs">
+    <tr><th>争论焦点</th><th>【甲派】</th><th>【乙派】</th></tr>
+    <tr><td>【焦点一】</td><td>【观点 + 背后的前提】</td><td>【观点 + 背后的前提】</td></tr>
+    <tr><td>【焦点二】</td><td>【……】</td><td>【……】</td></tr>
+  </table>
+
+  <div class="verdict">
+    <b>综合判断</b>
+    <p>【诚实的综合：当前证据更支持谁；写明不确定性——"在 X 前提下采信 A，若 Y 成立则 B 更对"。】</p>
+  </div>
+</section>
+
+<footer>
+  <h3>知识库更新记录</h3>
+  <p>本次新建档案：【人物列表】；增量更新：【人物列表】。知识库位置：sage-explorer/knowledge/【领域slug】/</p>
+  <p>本报告由 Sage Explorer 生成 · 人物选择以思考质量为标准，光谱标注如实反映主流/边缘地位，不代表价值判断。</p>
+</footer>
+
+</div>
+</body>
+</html>
